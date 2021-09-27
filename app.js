@@ -11,7 +11,7 @@ mongoose.connect('mongodb+srv://admin:iH1Tee2EOj75f2yG@cluster0.zcrlr.mongodb.ne
     .then(() => console.log('Connected to MongoDB!'))
     .catch(() => console.log('Failed to connect to MongoDB!'));
 
-// CORS (Cross-origin resource sharing) settings
+// CORS (Cross-origin resource shring) settings
 app.use(cors({
     origin: '*',
     allowedHeaders: 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization',
