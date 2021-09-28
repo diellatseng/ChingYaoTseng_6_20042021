@@ -6,9 +6,10 @@ const userRoutes = require('./routes/user');
 const sauceRoutes = require('./routes/sauce');
 
 const app = express();
+require('dotenv').config();
 
 //Connect to database
-mongoose.connect('mongodb+srv://admin:iH1Tee2EOj75f2yG@cluster0.zcrlr.mongodb.net/piiquante?retryWrites=true&w=majority',
+mongoose.connect(process.env.MONGODB_URL,
     { useNewUrlParser: true,
     useUnifiedTopology: true })
     .then(() => console.log('Connected to MongoDB!'))
