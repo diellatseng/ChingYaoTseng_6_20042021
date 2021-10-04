@@ -11,7 +11,7 @@ exports.createSauce = (req, res) => {
     });
   sauce.save()
     .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
-    .catch(error => res.status(400).json({ error }));
+    .catch(error => res.status(400).json({ message: error.message }));
 };
 
 exports.modifySauce = (req, res) => {
@@ -23,7 +23,7 @@ exports.modifySauce = (req, res) => {
 
   Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
     .then(() => res.status(200).json({ message: 'Objet modifié !'}))
-    .catch(error => res.status(400).json({ error }));
+    .catch(error => res.status(400).json({ message: error.message }));
 };
 
 exports.deleteSauce = (req, res) => {
@@ -33,10 +33,10 @@ exports.deleteSauce = (req, res) => {
       fs.unlink(`images/${filename}`, () => {
         sauce.deleteOne({ _id: req.params.id })
           .then(() => res.status(200).json({ message: 'Objet supprimé !'}))
-          .catch(error => res.status(400).json({ error }));
+          .catch(error => res.status(400).json({ message: error.message }));
       })
     })
-    .catch(error => res.status(500).json({ error }));
+    .catch(error => res.status(500).json({ message: error.message }));
 };
 
 exports.likeSauce = (req, res) => {
@@ -58,23 +58,23 @@ exports.likeSauce = (req, res) => {
             sauce.likes = arrLike.length;
             sauce.save();
             console.log(sauce);
-            res.status(200).json({ message: 'like' });
+            res.status(200).json({ message: 'liked' });
           }
           break;
           
-          case -1 :
-            if (arrLike.includes(userId)){
-              res.status(400).json({ message: 'User has already liked the sauce.'})
-            } else if (arrDislike.includes(userId)){
-              res.status(400).json({ message: 'User has already disliked the sauce.'})
-            } else {
-              arrDislike.push(userId);
-              sauce.dislikes = arrDislike.length;
-              sauce.save();
-              console.log(sauce);
-              res.status(200).json({ message: 'dislike' });
-            }
-          break;
+        case -1 :
+          if (arrLike.includes(userId)){
+            res.status(400).json({ message: 'User has already liked the sauce.'})
+          } else if (arrDislike.includes(userId)){
+            res.status(400).json({ message: 'User has already disliked the sauce.'})
+          } else {
+            arrDislike.push(userId);
+            sauce.dislikes = arrDislike.length;
+            sauce.save();
+            console.log(sauce);
+            res.status(200).json({ message: 'dislike' });
+          }
+        break;
         
         case 0 :
           if (arrLike.includes(userId)) {
@@ -102,17 +102,19 @@ exports.likeSauce = (req, res) => {
           res.status(400).json({ message: 'Unknown input.' })
       }
     })
-    .catch(error => res.status(500).json({ error }));
+    .catch(error => res.status(500).json({ message: error.message }));
 }
 
 exports.getOneSauce = (req, res) => {
     Sauce.findOne({ _id: req.params.id })
-      .then(sauce => res.status(200).json(sauce))
-      .catch(error => res.status(404).json({ error }));
+      .then(sauce => {
+        return res.status(200).json(sauce);
+      })
+      .catch(error => res.status(404).json({ message: error.message }));
 };
 
 exports.getSauce = (req, res) => {
     Sauce.find()
       .then(sauces => res.status(200).json(sauces))
-      .catch(error => res.status(400).json({ error }));
+      .catch(error => res.status(400).json({ message: error.message }));
 };
