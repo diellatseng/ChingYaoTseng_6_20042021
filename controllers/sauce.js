@@ -1,5 +1,6 @@
 const Sauce = require('../models/sauce');
 const fs = require('fs');
+const { use } = require('../routes/sauce');
 
 exports.createSauce = (req, res) => {
   const sauceObject = JSON.parse(req.body.sauce);
@@ -37,6 +38,72 @@ exports.deleteSauce = (req, res) => {
     })
     .catch(error => res.status(500).json({ error }));
 };
+
+exports.likeSauce = (req, res) => {
+  const userId = req.body.userId;
+  Sauce.findOne({ _id: req.params.id })
+    .then(sauce => {
+      
+      const arrLike = sauce.usersLiked;
+      const arrDislike = sauce.usersDisliked;
+
+      switch(req.body.like) {
+        case 1 :
+          if (arrLike.includes(userId)){
+            res.status(400).json({ message: 'User has already liked the sauce.'})
+          } else if (arrDislike.includes(userId)){
+            res.status(400).json({ message: 'User has already disliked the sauce.'})
+          } else {
+            arrLike.push(userId);
+            sauce.likes = arrLike.length;
+            sauce.save();
+            console.log(sauce);
+            res.status(200).json({ message: 'like' });
+          }
+          break;
+          
+          case -1 :
+            if (arrLike.includes(userId)){
+              res.status(400).json({ message: 'User has already liked the sauce.'})
+            } else if (arrDislike.includes(userId)){
+              res.status(400).json({ message: 'User has already disliked the sauce.'})
+            } else {
+              arrDislike.push(userId);
+              sauce.dislikes = arrDislike.length;
+              sauce.save();
+              console.log(sauce);
+              res.status(200).json({ message: 'dislike' });
+            }
+          break;
+        
+        case 0 :
+          if (arrLike.includes(userId)) {
+            for (let i = 0; i < arrLike.length; i++) {
+              if (arrLike[i] === userId) {
+                arrLike.splice(i, 1);
+                sauce.likes = arrLike.length;
+              }
+            }
+          } else if (arrDislike.includes(userId)) {
+            for (let i = 0; i < arrDislike.length; i++) {
+              if (arrDislike[i] === userId) {
+                arrDislike.splice(i, 1);
+                sauce.dislikes = arrDislike.length;
+              }
+            }
+          }
+          sauce.save();
+          console.log(sauce);
+          res.status(200).json({ message: 'cancel' });
+          break;
+
+        default: 
+          console.log('error'); 
+          res.status(400).json({ message: 'Unknown input.' })
+      }
+    })
+    .catch(error => res.status(500).json({ error }));
+}
 
 exports.getOneSauce = (req, res) => {
     Sauce.findOne({ _id: req.params.id })
