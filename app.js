@@ -9,17 +9,17 @@ const sauceRoutes = require('./routes/sauce');
 const app = express();
 require('dotenv').config();
 
-//Connect to database
+// Connect to database
 mongoose.connect(process.env.MONGODB_URL,
     { useNewUrlParser: true,
     useUnifiedTopology: true })
     .then(() => console.log('Connected to MongoDB!'))
     .catch(() => console.log('Failed to connect to MongoDB!'));
 
-// CORS (Cross-origin resource shring) settings
+// Enable all CORS requests
 app.use(cors());
 
-// To parse the incoming requests with JSON payloads
+// Parsing incoming requests with JSON payloads by using the express embedded functions
 app.use(express.json()); 
 app.use(express.urlencoded({extended: true}));
 
