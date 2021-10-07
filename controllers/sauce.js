@@ -1,6 +1,5 @@
 const Sauce = require('../models/sauce');
 const fs = require('fs');
-const { use } = require('../routes/sauce');
 
 exports.createSauce = (req, res) => {
   const sauceObject = JSON.parse(req.body.sauce);
@@ -48,59 +47,55 @@ exports.likeSauce = (req, res) => {
       const arrDislike = sauce.usersDisliked;
 
       switch(req.body.like) {
+        // If input '1' is received (user clicks on like)
         case 1 :
-          if (arrLike.includes(userId)){
-            res.status(400).json({ message: 'User has already liked the sauce.'})
-          } else if (arrDislike.includes(userId)){
-            res.status(400).json({ message: 'User has already disliked the sauce.'})
+          if (arrLike.includes(userId) || arrDislike.includes(userId)){                               // Returns an error if the user ID already exists in the list of liked/disliked users.
+            res.status(400).json({ message: 'Error! User has already liked/disliked the sauce.'})
           } else {
-            arrLike.push(userId);
-            sauce.likes = arrLike.length;
-            sauce.save();
-            console.log(sauce);
-            res.status(200).json({ message: 'liked' });
-          }
-          break;
-          
-        case -1 :
-          if (arrLike.includes(userId)){
-            res.status(400).json({ message: 'User has already liked the sauce.'})
-          } else if (arrDislike.includes(userId)){
-            res.status(400).json({ message: 'User has already disliked the sauce.'})
-          } else {
-            arrDislike.push(userId);
-            sauce.dislikes = arrDislike.length;
-            sauce.save();
-            console.log(sauce);
-            res.status(200).json({ message: 'dislike' });
+            arrLike.push(userId);                                                                     // Adds user ID into the list of liked users.
+            res.status(200).json({ message: "Aimé !" });
           }
         break;
-        
+          
+        // If input '-1' is received (user clicks on dislike)
+        case -1 :
+            if (arrLike.includes(userId) || arrDislike.includes(userId)){                             // Returns an error if the user ID already exists in the list of liked/disliked users.
+            res.status(400).json({ message: 'Error! User has already liked/disliked the sauce.'})
+          } else {
+            arrDislike.push(userId);                                                                  // Adds user ID into the list of disliked users.
+            res.status(200).json({ message: "N'aime pas !" });
+          }
+        break;
+            
+        // If input '0' is received (user cancels like or dislike)
         case 0 :
           if (arrLike.includes(userId)) {
             for (let i = 0; i < arrLike.length; i++) {
               if (arrLike[i] === userId) {
                 arrLike.splice(i, 1);
-                sauce.likes = arrLike.length;
               }
             }
           } else if (arrDislike.includes(userId)) {
             for (let i = 0; i < arrDislike.length; i++) {
               if (arrDislike[i] === userId) {
                 arrDislike.splice(i, 1);
-                sauce.dislikes = arrDislike.length;
               }
             }
           }
-          sauce.save();
-          console.log(sauce);
-          res.status(200).json({ message: 'cancel' });
-          break;
+          res.status(200).json({ message: 'Annulé !' });
+        break;
 
+        // Returns an error if any input other than '1', '-1' or '0' is received.
         default: 
           console.log('error'); 
-          res.status(400).json({ message: 'Unknown input.' })
+          res.status(400).json({ message: 'Error! Unknown input.' })
       }
+
+      sauce.likes = arrLike.length;
+      sauce.dislikes = arrDislike.length;
+      sauce.save();
+      console.log(sauce);
+
     })
     .catch(error => res.status(500).json({ message: error.message }));
 }
