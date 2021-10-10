@@ -7,7 +7,9 @@ const userRoutes = require('./routes/user');
 const sauceRoutes = require('./routes/sauce');
 
 const app = express();
-require('dotenv').config();
+
+//loads environment variables from the .env file into process.env
+require('dotenv').config(); 
 
 // Connect to database
 mongoose.connect(process.env.MONGODB_URL,
