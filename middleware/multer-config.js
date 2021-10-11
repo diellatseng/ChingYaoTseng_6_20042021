@@ -13,30 +13,20 @@ const storage = multer.diskStorage({
     callback(null, './images');
   },
   filename: (req, file, callback) => {
-    const name = file.originalname.split(' ').join('_');    //make sure that any space in file name will be replaced by "_"
+    const name = file.originalname.toLowerCase().split(' ').join('_');    //make sure that any space in file name will be replaced by "_"
     const extension = MIME_TYPES[file.mimetype];
     callback(null, name + Date.now() + '.' + extension);
   }
 });
 
-function checkFileType(file, cb){
-  // Allowed ext
-  const filetypes = /jpeg|jpg|png/;
-  // Check ext
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  // Check mime
-  const mimetype = filetypes.test(file.mimetype);
-
-  if(mimetype && extname){
-    return cb(null,true);
-  } else {
-    cb('Error: Images Only!');
-  }
-}
-
 module.exports = multer({
-  storage: storage
-//   fileFilter: function(_req, file, cb){
-//     checkFileType(file, cb);
-// }
+  storage: storage,
+  // Check the file extension before uploading, accepts only .png and .jpg
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype == "image/png" || file.mimetype == "image/jpg") {
+      cb(null, true);
+    } else {
+      return cb(null, false);
+    }
+  }
 }).single('image');
