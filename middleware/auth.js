@@ -11,8 +11,6 @@ module.exports = (req, res, next) => {
       next();                                                     //Forward to the next middleware
     }
   } catch {
-    res.status(403).json({
-      error: new Error('Invalid request!')
-    });
-  }
+    res.status(403)
+  };
 };

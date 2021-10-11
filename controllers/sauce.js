@@ -10,7 +10,11 @@ exports.createSauce = (req, res) => {
     });
   sauce.save()
     .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
-    .catch(error => res.status(400).json({ message: error.message }));
+    .catch(error => {
+      console.log(error);
+      return res.status(400).json({ message: error.message 
+      })
+    });
 };
 
 exports.modifySauce = (req, res) => {
