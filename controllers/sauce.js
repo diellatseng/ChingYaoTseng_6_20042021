@@ -9,11 +9,9 @@ exports.createSauce = (req, res) => {
     imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
   sauce.save()
-    .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
+    .then(() => res.status(201).json({ message: 'Object saved!'}))
     .catch(error => {
-      console.log(error);
-      return res.status(400).json({ message: error.message 
-      })
+      return res.status(400).json({ message: error.message })
     });
 };
 
@@ -41,7 +39,7 @@ exports.modifySauce = (req, res) => {
   }
   
   Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-    .then(() => res.status(200).json({ message: 'Objet modifié !'}))
+    .then(() => res.status(200).json({ message: 'Object modified!'}))
     .catch(error => res.status(400).json({ message: error.message }));
 };
 
@@ -51,7 +49,7 @@ exports.deleteSauce = (req, res) => {
       const filename = sauce.imageUrl.split('/images/')[1];
       fs.unlink(`images/${filename}`, () => {
         sauce.deleteOne({ _id: req.params.id })
-          .then(() => res.status(200).json({ message: 'Objet supprimé !'}))
+          .then(() => res.status(200).json({ message: 'Object deleted!'}))
           .catch(error => res.status(400).json({ message: error.message }));
       })
     })
@@ -73,7 +71,7 @@ exports.likeSauce = (req, res) => {
             res.status(400).json({ message: 'Error! User has already liked/disliked the sauce.'})
           } else {
             arrLike.push(userId);                                                                     // Adds user ID into the list of liked users.
-            res.status(200).json({ message: "Aimé !" });
+            res.status(200).json({ message: "Liked!" });
           }
         break;
           
@@ -83,7 +81,7 @@ exports.likeSauce = (req, res) => {
             res.status(400).json({ message: 'Error! User has already liked/disliked the sauce.'})
           } else {
             arrDislike.push(userId);                                                                  // Adds user ID into the list of disliked users.
-            res.status(200).json({ message: "N'aime pas !" });
+            res.status(200).json({ message: "Disliked!" });
           }
         break;
             
@@ -102,7 +100,7 @@ exports.likeSauce = (req, res) => {
               }
             }
           }
-          res.status(200).json({ message: 'Annulé !' });
+          res.status(200).json({ message: 'Cancelled!' });
         break;
 
         // Returns an error if any input other than '1', '-1' or '0' is received.

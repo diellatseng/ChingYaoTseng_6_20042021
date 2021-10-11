@@ -17,16 +17,17 @@ const storage = multer.diskStorage({
     const extension = MIME_TYPES[file.mimetype];
     callback(null, name + Date.now() + '.' + extension);
   }
-});
+})
+
+// const fileFilter = (req, file, callback) => {
+//   console.log(file.mimetype);
+//   if (file.mimetype == "image/png" || file.mimetype == "image/jpg") {
+//     callback(null, true);
+//   } else {
+//     callback(null, false);
+//   }
+// }
 
 module.exports = multer({
-  storage: storage,
-  // Check the file extension before uploading, accepts only .png and .jpg
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype == "image/png" || file.mimetype == "image/jpg") {
-      cb(null, true);
-    } else {
-      return cb(null, false);
-    }
-  }
+  storage: storage
 }).single('image');

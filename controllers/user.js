@@ -16,7 +16,7 @@ exports.signup = (req, res) => {
       })
       .catch(error => res.status(500).json({ message: error.message }))
   } else {
-    res.status(400).json({ message: 'at least 8 characters' })
+    res.status(400).json({ message: 'Error! Passwords must be at least 8 characters in length. It should contain at least one upper case English letter, one lower case English letter, one number and one special character.' })
   }
 };
 

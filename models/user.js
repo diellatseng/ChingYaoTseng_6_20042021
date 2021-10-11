@@ -4,13 +4,13 @@ const uniqueValidator = require('mongoose-unique-validator');
 const userSchema = new mongoose.Schema ({
     "email": {
         type: String, 
-        required: [true, 'Required'], 
-        unique: true,
-        match: [/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/, 'Invalid']
+        required: [true, 'email is required'], 
+        unique: [true, 'email has already been registered'],
+        match: [/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/, 'invalid. For example: name@domain.com']
     },
     "password": {
         type: String, 
-        required: true, 
+        required: [true, 'password is required'], 
     }
 });
 
