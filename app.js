@@ -8,7 +8,7 @@ const sauceRoutes = require('./routes/sauce');
 
 const app = express();
 
-//loads environment variables from the .env file into process.env
+// Loads environment variables from the .env file into process.env
 require('dotenv').config(); 
 
 // Connect to database
