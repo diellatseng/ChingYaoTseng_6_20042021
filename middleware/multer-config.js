@@ -15,7 +15,7 @@ const saveImageToStorage = {
     destination: (req, file, callback) => { callback(null, './images') },
     // Rename file
     filename: (req, file, callback) => {
-      const name = file.originalname.toLowerCase().split(' ').join('_');                      //make sure that any space in file name will be replaced by "_"
+      const name = file.originalname.toLowerCase().split(' ').join('_').split('.')[0];                      //make sure that any space in file name will be replaced by "_"
       const extension = path.extname(file.originalname);
       callback(null, name + Date.now() + extension);
     }
